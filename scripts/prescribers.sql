@@ -12,6 +12,13 @@ ORDER BY prescription.total_claim_count DESC;
 ----David Coffey has the highest claim amount at 4,538.
 
 --     b. Repeat the above, but this time report the nppes_provider_first_name, nppes_provider_last_org_name,  specialty_description, and the total number of claims.
+SELECT nppes_provider_first_name, nppes_provider_last_org_name, specialty_description, SUM(prescription.total_claim_count)
+FROM prescriber 
+LEFT JOIN prescription
+ON prescriber.npi=prescription.npi
+WHERE prescription.total_claim_count IS NOT NULL
+GROUP BY nppes_provider_first_name, nppes_provider_last_org_name, specialty_description, prescription.total_claim_count
+ORDER BY prescription.total_claim_count DESC;----
 
 -- 2. 
 --     a. Which specialty had the most total number of claims (totaled over all drugs)?
