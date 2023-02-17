@@ -18,8 +18,8 @@ LEFT JOIN prescription
 ON prescriber.npi=prescription.npi
 WHERE prescription.total_claim_count IS NOT NULL
 GROUP BY nppes_provider_first_name, nppes_provider_last_org_name, specialty_description, prescription.total_claim_count
-ORDER BY prescription.total_claim_count DESC;----
-
+ORDER BY prescription.total_claim_count DESC;
+----David Coffey, Family Practice, 4,538.
 -- 2. 
 --     a. Which specialty had the most total number of claims (totaled over all drugs)?
 SELECT prescriber.specialty_description, SUM(prescription.total_claim_count)
@@ -45,11 +45,23 @@ ORDER BY prescription.total_claim_count DESC;
 ----Family Practice has the highest number of claims, 4,538.
 
 --     c. **Challenge Question:** Are there any specialties that appear in the prescriber table that have no associated prescriptions in the prescription table?
-SELECT 
+SELECT prescriber.specialty_description, COUNT(prescription.drug_name)
+FROM prescription
+INNER JOIN prescriber
+USING(npi)
+WHERE prescriber.specialty_description IS NOT NULL AND prescription.drug_name IS NULL
+GROUP BY prescriber.specialty_description;
 --     d. **Difficult Bonus:** *Do not attempt until you have solved all other problems!* For each specialty, report the percentage of total claims by that specialty which are for opioids. Which specialties have a high percentage of opioids?
 
 -- 3. 
 --     a. Which drug (generic_name) had the highest total drug cost?
+SELECT drug.generic_name, prescription.total_drug_cost
+FROM drug
+LEFT JOIN prescription
+ON prescription.drug_name = drug.drug_name
+WHERE prescription.total_drug_cost IS NOT NULL 
+ORDER BY prescription.total_drug_cost DESC;
+----Pirfenidone has the highest drug cost at $2,829,174.30
 
 --     b. Which drug (generic_name) has the hightest total cost per day? **Bonus: Round your cost per day column to 2 decimal places. Google ROUND to see how this works.**
 
