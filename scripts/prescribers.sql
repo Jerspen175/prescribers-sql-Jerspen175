@@ -65,6 +65,13 @@ ORDER BY prescription.total_drug_cost DESC;
 
 --     b. Which drug (generic_name) has the hightest total cost per day? **Bonus: Round your cost per day column to 2 decimal places. Google ROUND to see how this works.**
 
+SELECT drug.generic_name, COUNT(prescription.total_30_day_fill_count/prescription.total_day_supply)/prescription.total_drug_cost AS cost_per_day  
+FROM drug
+LEFT JOIN prescription
+ON prescription.drug_name = drug.drug_name
+WHERE prescription.total_drug_cost IS NOT NULL 
+GROUP BY drug.generic_name
+ORDER BY cost_per_day DESC;
 -- 4. 
 --     a. For each drug in the drug table, return the drug name and then a column named 'drug_type' which says 'opioid' for drugs which have opioid_drug_flag = 'Y', says 'antibiotic' for those drugs which have antibiotic_drug_flag = 'Y', and says 'neither' for all other drugs.
 
