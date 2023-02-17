@@ -22,11 +22,30 @@ ORDER BY prescription.total_claim_count DESC;----
 
 -- 2. 
 --     a. Which specialty had the most total number of claims (totaled over all drugs)?
+SELECT prescriber.specialty_description, SUM(prescription.total_claim_count)
+FROM prescription
+LEFT JOIN drug
+USING(drug_name)
+LEFT JOIN prescriber 
+USING(npi)
+GROUP BY prescription.total_claim_count, specialty_description
+ORDER BY prescription.total_claim_count DESC;
+----FENOFIBRATE has the most claims at 5,859.
 
 --     b. Which specialty had the most total number of claims for opioids?
+SELECT drug.opioid_drug_flag,drug.drug_name, SUM(prescription.total_claim_count) AS opioids_claims, prescriber.specialty_description
+FROM prescription
+LEFT JOIN drug
+USING(drug_name)
+LEFT JOIN prescriber
+USING(npi)
+WHERE drug.opioid_drug_flag = 'Y'
+GROUP BY prescription.total_claim_count, drug.opioid_drug_flag, drug.drug_name, prescriber.specialty_description
+ORDER BY prescription.total_claim_count DESC;
+----Family Practice has the highest number of claims, 4,538.
 
 --     c. **Challenge Question:** Are there any specialties that appear in the prescriber table that have no associated prescriptions in the prescription table?
-
+SELECT 
 --     d. **Difficult Bonus:** *Do not attempt until you have solved all other problems!* For each specialty, report the percentage of total claims by that specialty which are for opioids. Which specialties have a high percentage of opioids?
 
 -- 3. 
