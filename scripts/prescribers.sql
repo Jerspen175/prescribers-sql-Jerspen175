@@ -95,15 +95,24 @@ GROUP BY drug.drug_name, opioid_drug_flag, antibiotic_drug_flag, total_drug_cost
 ----More money was spent on opioids.
 -- 5. 
 --     a. How many CBSAs are in Tennessee? **Warning:** The cbsa table contains information for all states, not just Tennessee.
-SELECT CBSA, COUNT(state)
+SELECT cbsa, COUNT(state)
 FROM cbsa
 LEFT JOIN fips_county
 USING(fipscounty)
 WHERE state = 'TN' 
-GROUP BY state, CBSA;
+GROUP BY state, cbsa;
 ---Tennessee has 42 CBSAs.
 --     b. Which cbsa has the largest combined population? Which has the smallest? Report the CBSA name and total population.
-SELECT CBSA, population
+SELECT cbsaname, population
+FROM cbsa
+LEFT JOIN zip_fips
+USING(fipscounty)
+LEFT JOIN population 
+USING(fipscounty)
+WHERE population IS NOT NULL
+GROUP BY cbsaname, population
+ORDER BY population ASC;
+----Memphis, TN-MS-AR has the largest has the largest at 937,847. Nashville-Davidson--Murfreesboro--Franklin, TN has the smallest at 8,773.
 
 --     c. What is the largest (in terms of population) county which is not included in a CBSA? Report the county name and population.
 
