@@ -95,8 +95,15 @@ GROUP BY drug.drug_name, opioid_drug_flag, antibiotic_drug_flag, total_drug_cost
 ----More money was spent on opioids.
 -- 5. 
 --     a. How many CBSAs are in Tennessee? **Warning:** The cbsa table contains information for all states, not just Tennessee.
-
+SELECT CBSA, COUNT(state)
+FROM cbsa
+LEFT JOIN fips_county
+USING(fipscounty)
+WHERE state = 'TN' 
+GROUP BY state, CBSA;
+---Tennessee has 42 CBSAs.
 --     b. Which cbsa has the largest combined population? Which has the smallest? Report the CBSA name and total population.
+SELECT CBSA, population
 
 --     c. What is the largest (in terms of population) county which is not included in a CBSA? Report the county name and population.
 
