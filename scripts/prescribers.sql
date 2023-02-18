@@ -177,7 +177,7 @@ WHERE nppes_provider_city = 'NASHVILLE' AND opioid_drug_flag = 'Y' AND specialty
 ORDER BY npi, drug_name;
 
 --     c. Finally, if you have not done so already, fill in any missing values for total_claim_count with 0. Hint - Google the COALESCE function.
-SELECT prescriber.npi, drug.drug_name, total_claim_count
+SELECT prescriber.npi, drug.drug_name, COALESCE(total_claim_count, 0) AS total_claim_count
 FROM drug
 CROSS JOIN prescriber
 LEFT JOIN prescription
