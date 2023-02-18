@@ -57,7 +57,15 @@ GROUP BY prescriber.specialty_description;
 ----There are 15 specialty practices that have no prescriptions in the prescription table.
 
 --     d. **Difficult Bonus:** *Do not attempt until you have solved all other problems!* For each specialty, report the percentage of total claims by that specialty which are for opioids. Which specialties have a high percentage of opioids?
-
+SELECT drug.opioid_drug_flag,drug.drug_name, SUM(prescription.total_claim_count) AS opioids_claims, prescriber.specialty_description
+FROM prescription
+LEFT JOIN drug
+USING(drug_name)
+LEFT JOIN prescriber
+USING(npi)
+WHERE drug.opioid_drug_flag = 'Y'
+GROUP BY prescription.total_claim_count, drug.opioid_drug_flag, drug.drug_name, prescriber.specialty_description
+ORDER BY prescription.total_claim_count DESC;
 -- 3. 
 --     a. Which drug (generic_name) had the highest total drug cost?
 SELECT drug.generic_name, prescription.total_drug_cost
@@ -76,6 +84,7 @@ ON prescription.drug_name = drug.drug_name
 WHERE prescription.total_drug_cost IS NOT NULL
 GROUP BY drug.generic_name
 ORDER BY cost_per_day DESC;
+----
 -- 4. 
 --     a. For each drug in the drug table, return the drug name and then a column named 'drug_type' which says 'opioid' for drugs which have opioid_drug_flag = 'Y', says 'antibiotic' for those drugs which have antibiotic_drug_flag = 'Y', and says 'neither' for all other drugs.
 SELECT drug_name,
