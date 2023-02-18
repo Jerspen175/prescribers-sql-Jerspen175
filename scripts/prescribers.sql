@@ -128,8 +128,22 @@ LIMIT 5;
 ----Sevier has the largest population at 95,523 and is not included in the cbsa.
 -- 6. 
 --     a. Find all rows in the prescription table where total_claims is at least 3000. Report the drug_name and the total_claim_count.
-
+SELECT drug_name, total_claim_count
+FROM prescription
+WHERE total_claim_count >= '3000'
+GROUP BY drug_name, total_claim_count
+ORDER BY total_claim_count DESC;
 --     b. For each instance that you found in part a, add a column that indicates whether the drug is an opioid.
+SELECT drug_name, total_claim_count, opioid_drug_flag, 
+CASE WHEN opioid_drug_flag = 'Y' THEN 'opioid'
+ELSE 'not_an_opioid' END
+FROM prescription
+LEFT JOIN drug
+USING(drug_name)
+WHERE total_claim_count >= '3000'
+GROUP BY drug_name, total_claim_count, opioid_drug_flag
+ORDER BY total_claim_count DESC;
+----HYDROCODONE-ACETAMINOPHEN and OXYCODONE HCL are the only two that are opioids.
 
 --     c. Add another column to you answer from the previous part which gives the prescriber first and last name associated with each row.
 
