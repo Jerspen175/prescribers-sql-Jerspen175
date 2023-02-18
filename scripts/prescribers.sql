@@ -115,7 +115,17 @@ ORDER BY population ASC;
 ----Memphis, TN-MS-AR has the largest has the largest at 937,847. Nashville-Davidson--Murfreesboro--Franklin, TN has the smallest at 8,773.
 
 --     c. What is the largest (in terms of population) county which is not included in a CBSA? Report the county name and population.
-
+SELECT MAX(population), county, cbsa
+FROM population
+LEFT JOIN fips_county 
+USING(fipscounty)
+LEFT JOIN cbsa
+USING(fipscounty)
+WHERE cbsa IS NULL
+GROUP BY population, county, cbsa
+ORDER BY population DESC
+LIMIT 5;
+----Sevier has the largest population at 95,523 and is not included in the cbsa.
 -- 6. 
 --     a. Find all rows in the prescription table where total_claims is at least 3000. Report the drug_name and the total_claim_count.
 
