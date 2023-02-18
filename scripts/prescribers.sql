@@ -133,6 +133,7 @@ FROM prescription
 WHERE total_claim_count >= '3000'
 GROUP BY drug_name, total_claim_count
 ORDER BY total_claim_count DESC;
+-------
 --     b. For each instance that you found in part a, add a column that indicates whether the drug is an opioid.
 SELECT drug_name, total_claim_count, opioid_drug_flag, 
 CASE WHEN opioid_drug_flag = 'Y' THEN 'opioid'
@@ -146,6 +147,19 @@ ORDER BY total_claim_count DESC;
 ----HYDROCODONE-ACETAMINOPHEN and OXYCODONE HCL are the only two that are opioids.
 
 --     c. Add another column to you answer from the previous part which gives the prescriber first and last name associated with each row.
+SELECT drug_name, total_claim_count, opioid_drug_flag, nppes_provider_last_org_name, nppes_provider_first_name,
+CASE WHEN opioid_drug_flag = 'Y' THEN 'opioid'
+ELSE 'not_an_opioid' END
+FROM prescription
+LEFT JOIN drug
+USING(drug_name)
+LEFT JOIN prescriber
+USING(npi)
+WHERE total_claim_count >= '3000'
+GROUP BY drug_name, total_claim_count, opioid_drug_flag, nppes_provider_first_name, nppes_provider_last_org_name
+ORDER BY total_claim_count DESC;
+
+-----
 
 -- 7. The goal of this exercise is to generate a full list of all pain management specialists in Nashville and the number of claims they had for each opioid. **Hint:** The results from all 3 parts will have 637 rows.
 
